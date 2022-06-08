@@ -6,7 +6,10 @@ using UnityEngine.EventSystems;
 
 public class Part_show : MonoBehaviour
 {
-    private Color startcolor;
+    Button_Control buttonc;
+    [SerializeField]
+    Material HighlightMaterial;
+    private Material startMaterial;
     private MeshRenderer meshrenderer;
     private Vector3 offset;
     private float ZCoord;
@@ -14,20 +17,32 @@ public class Part_show : MonoBehaviour
     public bool IsClicked = false;
     private void Start()
     {
+        buttonc = FindObjectOfType<Button_Control>();
         meshrenderer = GetComponent<MeshRenderer>();
-        startcolor = meshrenderer.material.color;
+        startMaterial = meshrenderer.material;
         Ppick = FindObjectOfType<Part_pick>();
 
     }
     private void OnMouseEnter()
     {
         if (!Ppick.Partmoving && !EventSystem.current.IsPointerOverGameObject())
-            meshrenderer.material.color = Color.red;
+            meshrenderer.material = HighlightMaterial;
     }
     private void OnMouseExit()
     {
         if (!IsClicked)
-            meshrenderer.material.color = startcolor;
+        {
+            if (buttonc.IsX_ray)
+            {
+                meshrenderer.material = buttonc.X_ray_material;
+            }
+            else
+            {
+                meshrenderer.material = startMaterial;
+            }
+
+        }
+
     }
 
     private void OnMouseDown()
@@ -43,7 +58,7 @@ public class Part_show : MonoBehaviour
         Ppick.Partmoving = true;
         IsClicked = !IsClicked;
 
-        meshrenderer.material.color = Color.red;
+        meshrenderer.material = HighlightMaterial;
 
     }
     private void OnMouseUp()
@@ -58,7 +73,7 @@ public class Part_show : MonoBehaviour
             return;
         }
         transform.position = GetWorldMousePosition() + offset;
-        meshrenderer.material.color = Color.red;
+        meshrenderer.material = HighlightMaterial;
     }
     public Vector3 GetWorldMousePosition()
     {
