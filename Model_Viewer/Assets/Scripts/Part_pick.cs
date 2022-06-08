@@ -38,6 +38,7 @@ public class Part_pick : MonoBehaviour
                         PartPanel.GetComponent<Part_Name>().SetModelPartName(obj.name);
                         var pos = part.GetWorldMousePosition();
                         pos.z -= 0.5f;
+                        pos.x += 1.0f;
                         PartPanel.transform.position = pos;
                         PartPanel.transform.SetParent(obj.transform);
                     }
